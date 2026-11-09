@@ -1,0 +1,102 @@
+@page "/"
+@using Campus.Client
+@inject ApiClient Api
+
+<h3>Campus Services</h3>
+<p style="color:red">@message</p>
+
+@if (!Api.LoggedIn)
+{
+    <input @bind="email" placeholder="Email" />
+    <input @bind="password" type="password" placeholder="Password" />
+    <button @onclick="Login">Login</button>
+    <button @onclick="Register">Register (student)</button>
+}
+else
+{
+    <p>Logged in as @Api.Role <button @onclick="Logout">Logout</button></p>
+
+    <h4>New request</h4>
+    <input @bind="title" placeholder="Title" />
+    <input @bind="description" placeholder="Description" />
+    <select @bind="categoryId">
+        @foreach (var c in categories)
+        {
+            <option value="@c.Id">@c.Name</option>
+        }
+    </select>
+    <button @onclick="Create" disabled="@busy">Submit</button>
+
+    <h4>Requests</h4>
+    <table border="1" cellpadding="6">
+        <tr><th>Id</th><th>Title</th><th>Category</th><th>Status</th><th>Assigned</th><th></th></tr>
+        @foreach (var r in requests)
+        {
+            <tr>
+                <td>@r.Id</td>
+                <td>@r.Title</td>
+                <td>@r.Category</td>
+                <td>@r.Status</td>
+                <td>@r.AssignedTo</td>
+                <td>
+                    @if (Api.Role == "Staff")   // UI convenience only. The server enforces the real rule.
+                    {
+                        <button @onclick="() => Assign(r.Id)">Assign to me</button>
+                        <button @onclick="() => Next(r)">Next status</button>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    string email = "", password = "", title = "", description = "", message = "";
+    int categoryId;
+    bool busy;
+    List<CategoryItem> categories = new();
+    List<RequestItem> requests = new();
+    static readonly string[] Order = { "Open", "Assigned", "InProgress", "Resolved", "Closed" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Api.RestoreAsync();
+        if (Api.LoggedIn) await Load();
+    }
+
+    async Task Login()
+    {
+        message = await Api.LoginAsync(email, password) ?? "";
+        if (Api.LoggedIn) await Load();
+    }
+
+    async Task Register() => message = await Api.RegisterAsync(email, password) ?? "Registered. Now log in.";
+
+    async Task Load()
+    {
+        categories = await Api.GetCategoriesAsync();
+        if (categories.Count > 0 && categoryId == 0) categoryId = categories[0].Id;
+        requests = await Api.GetRequestsAsync();
+    }
+
+    async Task Create()
+    {
+        if (busy) return;          // stops double-click duplicates (client side only)
+        busy = true;
+        message = await Api.CreateAsync(title, description, categoryId) ?? "";
+        if (message == "") { title = ""; description = ""; await Load(); }
+        busy = false;
+    }
+
+    async Task Assign(int id) { message = await Api.AssignAsync(id) ?? ""; await Load(); }
+
+    async Task Next(RequestItem r)
+    {
+        var i = Array.IndexOf(Order, r.Status);
+        if (i >= Order.Length - 1) return;
+        message = await Api.SetStatusAsync(r.Id, Order[i + 1]) ?? "";
+        await Load();
+    }
+
+    async Task Logout() { await Api.LogoutAsync(); requests.Clear(); }
+}

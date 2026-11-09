@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Campus.Api/Campus.Api.csproj" />
+  <Project Path="Campus.Business/Campus.Business.csproj" />
+  <Project Path="Campus.Client/Campus.Client.csproj" />
+  <Project Path="Campus.Data/Campus.Data.csproj" />
+  <Project Path="Campus.Models/Campus.Models.csproj" />
+</Solution>

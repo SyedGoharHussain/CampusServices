@@ -1,0 +1,112 @@
+# =======================================================================
+# Visual Studio & .NET Build Artifacts
+# =======================================================================
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+publish/
+dist/
+
+# Solution and Project user-specific files
+*.user
+*.userosv
+*.suo
+*.userprefs
+*.sln.docstates
+
+# Visual Studio cache & temporary files
+.vs/
+*.dotCover
+.cr/
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains Rider & ReSharper
+.idea/
+_ReSharper*/
+*.ReSharper
+*.DotSettings.user
+
+# NuGet Packages & Caches
+*.nupkg
+*.snupkg
+packages/
+**/[Pp]ackages/*
+
+# Unit Test & Code Coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+_teamcity*
+
+# =======================================================================
+# .NET MAUI & Mobile/Desktop Platform Artifacts
+# =======================================================================
+# Android
+*.apk
+*.aab
+**/Platforms/Android/bin/
+**/Platforms/Android/obj/
+
+# iOS / MacCatalyst
+*.ipa
+*.app
+**/Platforms/iOS/bin/
+**/Platforms/iOS/obj/
+**/Platforms/MacCatalyst/bin/
+**/Platforms/MacCatalyst/obj/
+
+# Windows / App Packages / Blazor Hybrid WebView2 runtime cache
+AppPackages/
+BundleArtifacts/
+*.msix
+*.appx
+*.appxbundle
+*.msixbundle
+*.WebView2/
+**/EBWebView/
+
+# =======================================================================
+# Databases & Local Runtime Storage
+# =======================================================================
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Local settings and user secrets
+appsettings.local.json
+appsettings.*.local.json
+*.local.json
+.env
+.env.*
+!.env.example
+
+# =======================================================================
+# Operating System Files
+# =======================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# =======================================================================
+# Crash Dumps & Profiling
+# =======================================================================
+*.dmp
+*.dump
+*.crashdump
