@@ -71,13 +71,37 @@ public class ApiClient
     public async Task<List<CategoryItem>> GetCategoriesAsync()
     {
         Auth();
-        return await _http.GetFromJsonAsync<List<CategoryItem>>("api/categories") ?? new();
+        try
+        {
+            return await _http.GetFromJsonAsync<List<CategoryItem>>("api/categories") ?? new();
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            await LogoutAsync();
+            return new();
+        }
+        catch
+        {
+            return new();
+        }
     }
 
     public async Task<List<RequestItem>> GetRequestsAsync()
     {
         Auth();
-        return await _http.GetFromJsonAsync<List<RequestItem>>("api/requests") ?? new();
+        try
+        {
+            return await _http.GetFromJsonAsync<List<RequestItem>>("api/requests") ?? new();
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            await LogoutAsync();
+            return new();
+        }
+        catch
+        {
+            return new();
+        }
     }
 
     public async Task<string?> CreateAsync(string title, string description, int categoryId)

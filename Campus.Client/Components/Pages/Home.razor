@@ -74,9 +74,26 @@ else
 
     async Task Load()
     {
-        categories = await Api.GetCategoriesAsync();
-        if (categories.Count > 0 && categoryId == 0) categoryId = categories[0].Id;
-        requests = await Api.GetRequestsAsync();
+        try
+        {
+            categories = await Api.GetCategoriesAsync();
+            if (!Api.LoggedIn)
+            {
+                message = "Session expired. Please log in again.";
+                return;
+            }
+            if (categories.Count > 0 && categoryId == 0) categoryId = categories[0].Id;
+            requests = await Api.GetRequestsAsync();
+            if (!Api.LoggedIn)
+            {
+                message = "Session expired. Please log in again.";
+                return;
+            }
+        }
+        catch
+        {
+            message = "Unable to reach server. Please ensure the API is running on http://localhost:5080.";
+        }
     }
 
     async Task Create()
